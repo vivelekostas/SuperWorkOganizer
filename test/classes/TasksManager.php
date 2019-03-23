@@ -28,7 +28,7 @@
 //
 //}
 
-class TasksMeneger {
+class TasksManager {
 
     public function save($newTask) {
         
