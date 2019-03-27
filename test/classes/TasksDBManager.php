@@ -2,40 +2,36 @@
 
 
 class TasksDBManager {
-//  Функция сохраняет новую задачу в DB
+
     public function insertNewTask($newTask) {
-        $link = mysqli_connect('localhost', 'mysql', 'mysql', 'kostas');    //ПОДКЛЮЧИЛИСЬ k DB KOSTAS
+        $mysqli = new mysqli('localhost', 'mysql', 'mysql', 'kostas'); //ПОДКЛЮЧИЛИСЬ k DB KOSTAS
 
-        $query= "INSERT INTO tasks VALUES (NULL, '"    //пере-ая с корректной коммандой для SQL
-                . $newTask->getName(). "', '"
-                . $newTask->getCategory(). "', "
-                . $newTask->getStatus(). ");";
+        $query = "INSERT INTO tasks VALUES (NULL, '"
+                . $newTask->getName() . "', '"
+                . $newTask->getCategory() . "', "
+                . $newTask->getStatus() . ");";
 
-        mysqli_query($link, $query);    //создаёт задачу
+        $mysqli->query($query);
+
+        $mysqli->close();
         
-        mysqli_insert_id($link);    //присваевает новой задаче id
-
-        mysqli_close($link);
     }
-    
-}
 
-// Копия для переделки в ООП формат
-//class TasksDBManager {
-//
-//    public function insertNewTask($newTask) {
-//        $link = mysqli_connect('localhost', 'mysql', 'mysql', 'kostas'); //ПОДКЛЮЧИЛИСЬ k DB KOSTAS
-//
-//        $query= "INSERT INTO tasks VALUES (NULL, '" 
-//                . $newTask->getName(). "', '"
-//                . $newTask->getCategory(). "', "
-//                . $newTask->getStatus(). ");";
-//        
-//        $insertQuery = mysqli_query($link, $query);
-//        
-//        mysqli_insert_id($link);
-//
-//        mysqli_close($link);
-//    }
-//    
-//}
+    public function createTableSql() {
+        $mysqli = new mysqli('localhost', 'mysql', 'mysql', 'kostas');
+        
+        $createTableSql = "CREATE TABLE
+        `tasks` (
+            `id` MEDIUMINT NOT NULL AUTO_INCREMENT,
+            `name` VARCHAR(255) NOT NULL,
+            `category` VARCHAR(255),
+            `status` SMALLINT(6) NOT NULL,
+            PRIMARY KEY(`id`)
+        );";
+
+        $mysqli->query($createTableSql);
+        
+        $mysqli->close();
+    }
+
+}
