@@ -31,15 +31,12 @@ if ($save === "DB") {
     $hasTask = $newCheckFor->checkForTasks();    //проверяет DB на наличие tasks, воз-щая true/false
 
     if ($hasTask) {    //вып-ся если флажок активен (true) - просто добавляет новую задачу
-        $newTasksDBManager = new TasksDBManager();
-        $newTasksDBManager->insertNewTask($newTask);
-        echo 'Задача успешно сохранена в DB';
+        $newCheckFor->insertNewTask($newTask);
+        echo ' Задача успешно сохранена в DB';
     } else {    //вып-ся если флажок не активен (false) - сначала создаёт т., а потом добавляет
-        $newTable = new TasksDBManager();
-        $newTable->createTableSql();
-        $newTasksDBManager = new TasksDBManager();
-        $newTasksDBManager->insertNewTask($newTask);
-        echo 'Задача успешно сохранена в DB';
+        $newCheckFor->createTableSql();
+        $newCheckFor->insertNewTask($newTask);
+        echo ' Задача успешно сохранена в DB';
     }
 } elseif ($save === "file") {
     $newTaskManager = new TasksManager();

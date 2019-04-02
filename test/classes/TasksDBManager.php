@@ -11,8 +11,7 @@ class TasksDBManager {
                 . $newTask->getStatus() . ");";
 
         $mysqli->query($query);
-
-        echo base64_decode('0JrQntCh0KLQryAtINCh0JrQntCX0JvQntCW0J7QnyEgINCR0JUt0JHQlS3QkdCVIQ==');
+        echo base64_decode('0JrQvtGB0YLRj9C9LCDRgtGLINC70YPRh9GI0LjQuSE= ');
         $mysqli->close();
     }
 
@@ -37,8 +36,8 @@ class TasksDBManager {
         $mysqli = new mysqli(HOST, USERNAME, PASSWD, DBNAME);
         $query = "SHOW TABLES FROM `kostas`;";
         $result = $mysqli->query($query);
-        $tables = mysqli_fetch_all($result, MYSQLI_NUM);    //получаю список всех т. из БД в виде массива
-
+        $tables = $result->fetch_all();    //получаю список всех т. из БД в виде массива 
+        $mysqli->close();
 
         $contol = false;    //как бы "флажок"
         foreach ($tables as $name) {
@@ -47,7 +46,6 @@ class TasksDBManager {
             }
         }
         return $contol;    //возвращает true либо false  
-        $mysqli->close();
     }
 
 }
