@@ -3,7 +3,8 @@
 require_once ("./classes/Task.php");
 require_once ('./classes/TasksManager.php');
 require_once ('./classes/TasksDBManager.php');
-require_once ('./config.php');
+//require_once ('./config.php');
+require_once ('./classes/Config.php');
 
 
 echo 'Хотите создать новую задачу? y/n: ';
