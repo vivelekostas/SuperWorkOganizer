@@ -3,7 +3,8 @@
 class TasksDBManager {
 
     public function insertNewTask($newTask) {
-        $mysqli = new mysqli(HOST, USERNAME, PASSWD, DBNAME); //ПОДКЛЮЧИЛИСЬ k DB KOSTAS
+//        $mysqli = new mysqli(HOST, USERNAME, PASSWD, DBNAME); // вариант подключения если конфиг в константах
+        $mysqli = new mysqli(Config::myHost(), Config::myUsername(), Config::myPasswd(), Config::myDBname());
 
         $query = "INSERT INTO tasks VALUES (NULL, '"
                 . $newTask->getName() . "', '"
@@ -16,7 +17,7 @@ class TasksDBManager {
     }
 
     public function createTableSql() {
-        $mysqli = new mysqli(HOST, USERNAME, PASSWD, DBNAME);
+        $mysqli = new mysqli(Config::myHost(), Config::myUsername(), Config::myPasswd(), Config::myDBname());
 
         $createTableSql = "CREATE TABLE
         `tasks` (
@@ -33,7 +34,8 @@ class TasksDBManager {
     }
 
     public function checkForTasks() {
-        $mysqli = new mysqli(HOST, USERNAME, PASSWD, DBNAME);
+        $mysqli = new mysqli(Config::myHost(), Config::myUsername(), Config::myPasswd(), Config::myDBname());
+        
         $query = "SHOW TABLES FROM `kostas`;";
         $result = $mysqli->query($query);
         $tables = $result->fetch_all();    //получаю список всех т. из БД в виде массива 
@@ -46,6 +48,16 @@ class TasksDBManager {
             }
         }
         return $contol;    //возвращает true либо false  
+    }
+
+    public function showAllTasks() {
+        $mysqli = new mysqli(Config::myHost(), Config::myUsername(), Config::myPasswd(), Config::myDBname());
+
+        $query = "SELECT id, name, category, status FROM `tasks`;";
+        $result = $mysqli->query($query);
+        $tasks = $result->fetch_all(MYSQLI_ASSOC);
+        $mysqli->close();
+        return $tasks;
     }
 
 }
