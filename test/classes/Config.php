@@ -14,23 +14,26 @@
 //Пример суперлютого ООП! Больше ООП!!
 
 class Config {
+
     static $host = 'localhost';
     static $username = 'mysql';
     static $passwd = 'mysql';
     static $dbname = 'kostas';
-    
+
     static function myHost() {
         return self::$host;
     }
+
     static function myUsername() {
         return self::$username;
     }
+
     static function myPasswd() {
         return self::$passwd;
     }
+
     static function myDBname() {
         return self::$dbname;
     }
+
 }
-
-
