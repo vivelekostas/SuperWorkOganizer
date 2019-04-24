@@ -1,6 +1,6 @@
 <?php
 
-class TasksManager {
+class TasksCSVManager {
 
     public function save($newTask) {
 

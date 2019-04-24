@@ -7,33 +7,36 @@
  */
 
 /**
- * Description of Config
+ * Конфиг подключения к BD
  *
  * @author User
  */
-//Пример суперлютого ООП! Больше ООП!!
-
 class Config {
 
     static $host = 'localhost';
     static $username = 'mysql';
     static $passwd = 'mysql';
     static $dbname = 'kostas';
+    static $charset = 'utf8';
 
-    static function myHost() {
+    static function getHost() {
         return self::$host;
     }
 
-    static function myUsername() {
+    static function getUsername() {
         return self::$username;
     }
 
-    static function myPasswd() {
+    static function getPasswd() {
         return self::$passwd;
     }
 
-    static function myDBname() {
+    static function getDBname() {
         return self::$dbname;
+    }
+    
+    static function getCharset() {
+        return self::$charset;
     }
 
 }
