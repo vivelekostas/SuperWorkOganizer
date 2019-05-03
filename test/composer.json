@@ -1,0 +1,6 @@
+{
+    "require": {
+        "symfony/console": "v4.2.7",
+        "slim/slim":"^3.12"
+    }
+}
