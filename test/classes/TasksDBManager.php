@@ -1,11 +1,5 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
  * Работает с задачами:
  * создаёт таблицу `tasks` и проверяет DB её наличие;
@@ -42,7 +36,7 @@ class TasksDBManager {
             PRIMARY KEY(`id`)
         );";
         $createTableSql = $this->link->exec($sql);
-        $createTableSql = null;
+        $createTableSql = null; // удаляет объект https://www.php.net/manual/ru/pdo.connections.php
     }
 
     /**
@@ -67,35 +61,24 @@ class TasksDBManager {
 
     /**
      * Сохраняет новую задачу в DB
-     * @param type $newTask
+     * @param type $Task
      * @return boolean
      */
-    public function insertNewTask($newTask) {
+    public function insertNewTask($Task) {
         $insertQuery = "INSERT INTO `tasks` VALUES (?, ?, ?, ?);";
                
         $stmtPrepareQuery = $this->link->prepare($insertQuery);
-        $stmtPrepareQuery->execute([null, $newTask->getName(),$newTask->getCategory(),$newTask->getStatus()]);
+        $stmtPrepareQuery->execute([null, $Task->getName(),$Task->getCategory(),$Task->getStatus()]);
         $stmtPrepareQuery = null;
 
         return true;
-    }
-    
-    /**
-     * выводит инфо о новой задаче
-     * @param type $newTask
-     */
-    public function Display($newTask) {
-        echo 'НОВАЯ ЗАДАЧА' . PHP_EOL;
-        echo "Название: {$newTask->getName()}" . PHP_EOL;
-        echo "Категория: {$newTask->getCategory()}" . PHP_EOL;
-        echo "Статус: {$newTask->getStatus()}" . PHP_EOL;
     }
 
     /**
      * возвращает массив всех задач 
      * @return type
      */
-    public function showAllTasks() {
+    public function getAllTasks() {
         $showAllQuery = "SELECT * FROM `tasks`;";
         $showAllTasks = $this->link->query($showAllQuery);
         $arrayOfTasks = $showAllTasks->fetchAll();
@@ -107,7 +90,7 @@ class TasksDBManager {
      * возвращает массив всех актуальных(рабочих) задач 
      * @return type
      */
-    public function showAllActualTasks() {
+    public function getAllActualTasks() {
         $showAllActualQuery = "SELECT * FROM `tasks` WHERE `status` < ?;";
         $stmtPrepareQuery = $this->link->prepare($showAllActualQuery);
         $stmtPrepareQuery->execute(['3']);
@@ -120,7 +103,7 @@ class TasksDBManager {
      * возвращает массив всех готовых задач
      * @return type
      */
-    public function showAllFinishedTasks() {
+    public function getAllFinishedTasks() {
         $showAllFinishedQuery = "SELECT * FROM `tasks` WHERE `status` = ?;";
         $stmtPrepareQuery = $this->link->prepare($showAllFinishedQuery);
         $stmtPrepareQuery->execute(['3']);
@@ -133,7 +116,7 @@ class TasksDBManager {
      * возвращает массив всех актуальных простых задач
      * @return type
      */
-    public function allActualSimple() {
+    public function getAllActualSimple() {
         $showActualSimpleQuery = "SELECT * FROM `tasks` WHERE `status` = ? AND `category` = ?;";
         $stmtPrepareQuery = $this->link->prepare($showActualSimpleQuery);
         $stmtPrepareQuery->execute(['1', 'simple']);
@@ -146,7 +129,7 @@ class TasksDBManager {
      * возвращает массив всех актуальных сложных задач
      * @return type
      */
-    public function allActualComplex() {
+    public function getAllActualComplex() {
         $showActualComplexQuery = "SELECT * FROM `tasks` WHERE `status` = ? AND `category` = ?;";
         $stmtPrepareQuery = $this->link->prepare($showActualComplexQuery);
         $stmtPrepareQuery->execute(['1', 'complex']);
@@ -159,7 +142,7 @@ class TasksDBManager {
      * возвращает массив всех еженедельных задач
      * @return type
      */
-    public function allWeekly() {
+    public function getAllWeekly() {
         $allWeeklyQuery = "SELECT * FROM `tasks` WHERE `category` = ?;";
         $stmtPrepareQuery = $this->link->prepare($allWeeklyQuery);
         $stmtPrepareQuery->execute(['weekly']);
