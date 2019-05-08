@@ -21,18 +21,26 @@ class Task {
      */
     private $name;
 
-    public function __construct(string $name, string $category, int $status) {
+    /**
+     * 
+     * @param string $name
+     * @param string $category
+     * @param int $status
+     * @throws Exception
+     */
+    public function __construct(string $name, $category, int $status) {
+        if ($name == null){
+            throw new Exception('Не указано название!!');
+        }
+
         $this->name = $name;
 
-//        if (!(($category == 'weekly') or ( $category == 'simple') or ( $category == 'complex'))) {
-//        if ($category !== 'weekly' AND $category !== 'simple' AND $category !== 'complex') {
-        if (!in_array($category, ['weekly', 'simple', 'complex'])) {
+        if (!(($category == 'weekly') or ( $category == 'simple') or ( $category == 'complex'))) {
             throw new Exception(' Неверно указана категория!');
         }
 
         $this->category = $category;
 
-        //TODO: А если status==jopa ?
         if ($status > '3') {
             throw new Exception(' Неверно указан статус!');
         }

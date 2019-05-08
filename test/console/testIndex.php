@@ -5,11 +5,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-require_once './classes/Config.php'; 
-require_once './classes/Task.php';
-require_once './classes/TasksDBManager.php';
-require_once './classes/TasksCSVManager.php';
-require './vendor/autoload.php';
+require_once '../classes/Config.php'; 
+require_once '../classes/Task.php';
+require_once '../classes/TasksDBManager.php';
+require_once '../classes/TasksCSVManager.php';
+require '../vendor/autoload.php';
 
 use Symfony\Component\Console\Helper\TableSeparator;
 use Symfony\Component\Console\Helper\Table;

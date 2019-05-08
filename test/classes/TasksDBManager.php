@@ -28,7 +28,7 @@ class TasksDBManager {
      */
     public function createTableSql() {
         $sql = "CREATE TABLE
-        `task` (
+        `tasks` (
             `id` MEDIUMINT NOT NULL AUTO_INCREMENT,
             `name` VARCHAR(255) NOT NULL,
             `category` VARCHAR(255),
