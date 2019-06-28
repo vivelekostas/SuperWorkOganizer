@@ -1,9 +1,9 @@
 <?php
 
-class TasksCSVManager {
-
-    public function save($newTask) {
-
+class TasksCSVManager
+{
+    public function save($newTask)
+    {
         switch ($newTask->getCategory()) {
             case "weekly":
                 $filename = './category/weekly.csv';
@@ -18,5 +18,4 @@ class TasksCSVManager {
         $dataTask = "Название: " . $newTask->getName() . "; Категория: " . $newTask->getCategory() . "; Статус: " . $newTask->getStatus() . PHP_EOL;
         file_put_contents($filename, $dataTask, FILE_APPEND);
     }
-
 }

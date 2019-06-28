@@ -61,22 +61,22 @@ class TasksDBManager {
 
     /**
      * Сохраняет новую задачу в DB
-     * @param type $Task
+     * @param type $task
      * @return boolean
      */
-    public function insertNewTask($Task) {
+    public function insertNewTask($task) {
         $insertQuery = "INSERT INTO `tasks` VALUES (?, ?, ?, ?);";
-               
+
         $stmtPrepareQuery = $this->link->prepare($insertQuery);
-        $stmtPrepareQuery->execute([null, $Task->getName(),$Task->getCategory(),$Task->getStatus()]);
+        $stmtPrepareQuery->execute([null, $task->getName(), $task->getCategory(), $task->getStatus()]);
         $stmtPrepareQuery = null;
 
         return true;
     }
 
     /**
-     * возвращает массив всех задач 
-     * @return type
+     * возвращает массив всех задач
+     * @return array
      */
     public function getAllTasks() {
         $showAllQuery = "SELECT * FROM `tasks`;";
@@ -87,8 +87,8 @@ class TasksDBManager {
     }
 
     /**
-     * возвращает массив всех актуальных(рабочих) задач 
-     * @return type
+     * возвращает массив всех актуальных(рабочих) задач
+     * @return array
      */
     public function getAllActualTasks() {
         $showAllActualQuery = "SELECT * FROM `tasks` WHERE `status` < ?;";
@@ -101,7 +101,7 @@ class TasksDBManager {
 
     /**
      * возвращает массив всех готовых задач
-     * @return type
+     * @return array
      */
     public function getAllFinishedTasks() {
         $showAllFinishedQuery = "SELECT * FROM `tasks` WHERE `status` = ?;";
@@ -114,7 +114,7 @@ class TasksDBManager {
 
     /**
      * возвращает массив всех актуальных простых задач
-     * @return type
+     * @return array
      */
     public function getAllActualSimple() {
         $showActualSimpleQuery = "SELECT * FROM `tasks` WHERE `status` = ? AND `category` = ?;";
@@ -127,7 +127,7 @@ class TasksDBManager {
 
     /**
      * возвращает массив всех актуальных сложных задач
-     * @return type
+     * @return array
      */
     public function getAllActualComplex() {
         $showActualComplexQuery = "SELECT * FROM `tasks` WHERE `status` = ? AND `category` = ?;";
@@ -140,7 +140,7 @@ class TasksDBManager {
 
     /**
      * возвращает массив всех еженедельных задач
-     * @return type
+     * @return array
      */
     public function getAllWeekly() {
         $allWeeklyQuery = "SELECT * FROM `tasks` WHERE `category` = ?;";
@@ -153,7 +153,7 @@ class TasksDBManager {
 
     /**
      * возвращает массив всех простых задач
-     * @return type
+     * @return array
      */
     public function allSimple() {
         $allSimpleQuery = "SELECT * FROM `tasks` WHERE `category` = ?;";
@@ -166,7 +166,7 @@ class TasksDBManager {
 
     /**
      * возвращает массив всех сложных задач
-     * @return type
+     * @return array
      */
     public function allComplex() {
         $allComplexQuery = "SELECT * FROM `tasks` WHERE `category` = ?;";

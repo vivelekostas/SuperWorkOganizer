@@ -1,0 +1,7 @@
+# Игнорировать файл foo.txt.
+/vendor/*
+/*.php
+/*.TXT
+/*.csv
+/category/*
+/nbproject/*
