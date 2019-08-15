@@ -1,0 +1,24 @@
+{
+    "name": "vivelekostas/SuperWorkOganizer",
+    "type": "application",
+    "description": "Органайзер. Приложение, написанное в процессе обучения.",
+    "authors": [
+        {
+            "name": "Konstantin Grebenük",
+            "email": "vivelakostas1096@gmail.com",
+            "role": "developer"
+        },
+        {
+            "name": "Ruslan Mavlänov",
+            "email": "r.v.mavlyanov@yandex.ru",
+            "role": "reviewer"
+        }
+    ],
+    "require": {
+        "symfony/console": "v4.2.7",
+        "slim/slim":"^3.12"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "*"
+    }
+}

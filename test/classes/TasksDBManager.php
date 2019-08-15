@@ -1,25 +1,33 @@
 <?php
 
+/**
+ * Работает с задачами:
+ * создаёт таблицу `tasks` и проверяет DB её наличие;
+ * сохраняет в DB; выводит списки по различным категориям и статусам;
+ *
+ * @author User
+ */
 class TasksDBManager {
 
-    public function insertNewTask($newTask) {
-//        $mysqli = new mysqli(HOST, USERNAME, PASSWD, DBNAME); // вариант подключения если конфиг в константах
-        $mysqli = new mysqli(Config::myHost(), Config::myUsername(), Config::myPasswd(), Config::myDBname());
+    private $link;
 
-        $query = "INSERT INTO tasks VALUES (NULL, '"
-                . $newTask->getName() . "', '"
-                . $newTask->getCategory() . "', "
-                . $newTask->getStatus() . ");";
-
-        $mysqli->query($query);
-        echo base64_decode('0JrQvtGB0YLRj9C9LCDRgtGLINC70YPRh9GI0LjQuSE= ');
-        $mysqli->close();
+    public function __construct() {
+        $this->connect();
     }
 
-    public function createTableSql() {
-        $mysqli = new mysqli(Config::myHost(), Config::myUsername(), Config::myPasswd(), Config::myDBname());
+    private function connect() {
+        $dsn = 'mysql:host=' . Config::getHost() .
+                ';dbname=' . Config::getDBname() .
+                ';charset=' . Config::getCharset();
+        $this->link = new PDO($dsn, Config::getUsername(), Config::getPasswd());
+        return $this;
+    }
 
-        $createTableSql = "CREATE TABLE
+    /**
+     * создаёт таблицу task
+     */
+    public function createTableSql() {
+        $sql = "CREATE TABLE
         `tasks` (
             `id` MEDIUMINT NOT NULL AUTO_INCREMENT,
             `name` VARCHAR(255) NOT NULL,
@@ -27,37 +35,146 @@ class TasksDBManager {
             `status` SMALLINT(6) NOT NULL,
             PRIMARY KEY(`id`)
         );";
-
-        $mysqli->query($createTableSql);
-
-        $mysqli->close();
+        $createTableSql = $this->link->exec($sql);
+        $createTableSql = null; // удаляет объект https://www.php.net/manual/ru/pdo.connections.php
     }
 
+    /**
+     * проверяет DB наличие таблицы `tasks`
+     * @return boolean
+     */
     public function checkForTasks() {
-        $mysqli = new mysqli(Config::myHost(), Config::myUsername(), Config::myPasswd(), Config::myDBname());
-        
-        $query = "SHOW TABLES FROM `kostas`;";
-        $result = $mysqli->query($query);
-        $tables = $result->fetch_all();    //получаю список всех т. из БД в виде массива 
-        $mysqli->close();
+        $showTablesQuery = "SHOW TABLES FROM `kostas`;";
+        $result = $this->link->query($showTablesQuery);
+        $tables = $result->fetchAll();
 
-        $contol = false;    //как бы "флажок"
+        $control = false;
         foreach ($tables as $name) {
-            if (in_array("tasks", $name)) {    //ищет в массиве нужную т. "tasks"
-                $contol = true;    //активирует флажок если tasks уже существует
+            if (in_array('tasks', $name)) {
+                $control = true;
             }
         }
-        return $contol;    //возвращает true либо false  
+        $result = null;
+        $tables = null;
+        return $control;
     }
 
-    public function showAllTasks() {
-        $mysqli = new mysqli(Config::myHost(), Config::myUsername(), Config::myPasswd(), Config::myDBname());
+    /**
+     * Сохраняет новую задачу в DB
+     * @param type $task
+     * @return boolean
+     */
+    public function insertNewTask($task) {
+        $insertQuery = "INSERT INTO `tasks` VALUES (?, ?, ?, ?);";
 
-        $query = "SELECT id, name, category, status FROM `tasks`;";
-        $result = $mysqli->query($query);
-        $tasks = $result->fetch_all(MYSQLI_ASSOC);
-        $mysqli->close();
-        return $tasks;
+        $stmtPrepareQuery = $this->link->prepare($insertQuery);
+        $stmtPrepareQuery->execute([null, $task->getName(), $task->getCategory(), $task->getStatus()]);
+        $stmtPrepareQuery = null;
+
+        return true;
+    }
+
+    /**
+     * возвращает массив всех задач
+     * @return array
+     */
+    public function getAllTasks() {
+        $showAllQuery = "SELECT * FROM `tasks`;";
+        $showAllTasks = $this->link->query($showAllQuery);
+        $arrayOfTasks = $showAllTasks->fetchAll();
+        $showAllTasks = null;
+        return $arrayOfTasks;
+    }
+
+    /**
+     * возвращает массив всех актуальных(рабочих) задач
+     * @return array
+     */
+    public function getAllActualTasks() {
+        $showAllActualQuery = "SELECT * FROM `tasks` WHERE `status` < ?;";
+        $stmtPrepareQuery = $this->link->prepare($showAllActualQuery);
+        $stmtPrepareQuery->execute(['3']);
+        $arrayOfAllActual = $stmtPrepareQuery->fetchAll(PDO::FETCH_ASSOC);
+        $stmtPrepareQuery = null;
+        return $arrayOfAllActual;
+    }
+
+    /**
+     * возвращает массив всех готовых задач
+     * @return array
+     */
+    public function getAllFinishedTasks() {
+        $showAllFinishedQuery = "SELECT * FROM `tasks` WHERE `status` = ?;";
+        $stmtPrepareQuery = $this->link->prepare($showAllFinishedQuery);
+        $stmtPrepareQuery->execute(['3']);
+        $arrayOfAllFinished = $stmtPrepareQuery->fetchAll(PDO::FETCH_ASSOC);
+        $stmtPrepareQuery = null;
+        return $arrayOfAllFinished;
+    }
+
+    /**
+     * возвращает массив всех актуальных простых задач
+     * @return array
+     */
+    public function getAllActualSimple() {
+        $showActualSimpleQuery = "SELECT * FROM `tasks` WHERE `status` = ? AND `category` = ?;";
+        $stmtPrepareQuery = $this->link->prepare($showActualSimpleQuery);
+        $stmtPrepareQuery->execute(['1', 'simple']);
+        $arrayOfActualSimple = $stmtPrepareQuery->fetchAll(PDO::FETCH_ASSOC);
+        $stmtPrepareQuery = null;
+        return $arrayOfActualSimple;
+    }
+
+    /**
+     * возвращает массив всех актуальных сложных задач
+     * @return array
+     */
+    public function getAllActualComplex() {
+        $showActualComplexQuery = "SELECT * FROM `tasks` WHERE `status` = ? AND `category` = ?;";
+        $stmtPrepareQuery = $this->link->prepare($showActualComplexQuery);
+        $stmtPrepareQuery->execute(['1', 'complex']);
+        $arrayOfActualComplex = $stmtPrepareQuery->fetchAll(PDO::FETCH_ASSOC);
+        $stmtPrepareQuery = null;
+        return $arrayOfActualComplex;
+    }
+
+    /**
+     * возвращает массив всех еженедельных задач
+     * @return array
+     */
+    public function getAllWeekly() {
+        $allWeeklyQuery = "SELECT * FROM `tasks` WHERE `category` = ?;";
+        $stmtPrepareQuery = $this->link->prepare($allWeeklyQuery);
+        $stmtPrepareQuery->execute(['weekly']);
+        $arrayOfAllWeekly = $stmtPrepareQuery->fetchAll(PDO::FETCH_ASSOC);
+        $stmtPrepareQuery = null;
+        return $arrayOfAllWeekly;
+    }
+
+    /**
+     * возвращает массив всех простых задач
+     * @return array
+     */
+    public function allSimple() {
+        $allSimpleQuery = "SELECT * FROM `tasks` WHERE `category` = ?;";
+        $stmtPrepareQuery = $this->link->prepare($allSimpleQuery);
+        $stmtPrepareQuery->execute(['simple']);
+        $arrayOfAllSimple = $stmtPrepareQuery->fetchAll(PDO::FETCH_ASSOC);
+        $stmtPrepareQuery = null;
+        return $arrayOfAllSimple;
+    }
+
+    /**
+     * возвращает массив всех сложных задач
+     * @return array
+     */
+    public function allComplex() {
+        $allComplexQuery = "SELECT * FROM `tasks` WHERE `category` = ?;";
+        $stmtPrepareQuery = $this->link->prepare($allComplexQuery);
+        $stmtPrepareQuery->execute(['complex']);
+        $arrayOfAllComplex = $stmtPrepareQuery->fetchAll(PDO::FETCH_ASSOC);
+        $stmtPrepareQuery = null;
+        return $arrayOfAllComplex;
     }
 
 }

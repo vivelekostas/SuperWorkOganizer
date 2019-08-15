@@ -1,39 +1,36 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
- * Description of Config
+ * Конфиг подключения к BD
  *
  * @author User
  */
-//Пример суперлютого ООП! Больше ООП!!
-
 class Config {
 
-    static $host = 'localhost';
-    static $username = 'mysql';
-    static $passwd = 'mysql';
-    static $dbname = 'kostas';
+    private static $host = 'localhost';
+    private static $username = 'mysql';
+    private static $passwd = 'mysql';
+    private static $dbname = 'kostas';
+    private static $charset = 'utf8';
 
-    static function myHost() {
+    public static function getHost() {
         return self::$host;
     }
 
-    static function myUsername() {
+    public static function getUsername() {
         return self::$username;
     }
 
-    static function myPasswd() {
+    public static function getPasswd() {
         return self::$passwd;
     }
 
-    static function myDBname() {
+    public static function getDBname() {
         return self::$dbname;
+    }
+
+    public static function getCharset() {
+        return self::$charset;
     }
 
 }
